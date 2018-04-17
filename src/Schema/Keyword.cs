@@ -2,10 +2,12 @@
 using Microsoft.VisualStudio.Imaging.Interop;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace EditorConfig
 {
+    [DebuggerDisplay("{Name}")]
     /// <summary>The keyword is the name-part of a property.</summary>
     public class Keyword : ITooltip
     {
