@@ -155,7 +155,7 @@ namespace EditorConfig
             else if (!string.IsNullOrWhiteSpace(text))
                 applicableSpan = span;
             else
-                return false;
+                applicableSpan = new SnapshotSpan(triggerLocation, 0); // TODO: see why this method doesn't get called on a bare line
 
             return true;
         }
