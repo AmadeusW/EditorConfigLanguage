@@ -61,6 +61,10 @@
     <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
     <Compile Include="CodeExpansions\EnableSnippetsCommand.cs" />
     <Compile Include="Commands\HideDefaultCommands.cs" />
+    <Compile Include="Completion\AsyncCompletionCommitManager.cs" />
+    <Compile Include="Completion\AsyncCompletionItemSource.cs" />
+    <Compile Include="Completion\AsyncCompletionCommitManagerProvider.cs" />
+    <Compile Include="Completion\AsyncCompletionItemSourceProvider.cs" />
     <Compile Include="Completion\CompletionOptions.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -190,6 +194,7 @@
     <Content Include="CodeExpansions\Snippets\basicdocument.snippet">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -237,7 +242,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.VisualStudio.CoreUtility.15.4.27004\lib\net45\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
+      <HintPath>..\packages\Microsoft.VisualStudio.CoreUtility.15.7.388-preview-gd672682c7b\lib\net46\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Editor, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -255,6 +260,10 @@
     <Reference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\packages\Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.15.0.25726-Preview5\lib\Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Language, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Language.15.7.388-preview-gd672682c7b\lib\net46\Microsoft.VisualStudio.Language.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -324,19 +333,19 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Text.Data, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.VisualStudio.Text.Data.15.4.27004\lib\net45\Microsoft.VisualStudio.Text.Data.dll</HintPath>
+      <HintPath>..\packages\Microsoft.VisualStudio.Text.Data.15.7.388-preview-gd672682c7b\lib\net46\Microsoft.VisualStudio.Text.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.VisualStudio.Text.Logic.15.4.27004\lib\net45\Microsoft.VisualStudio.Text.Logic.dll</HintPath>
+      <HintPath>..\packages\Microsoft.VisualStudio.Text.Logic.15.7.388-preview-gd672682c7b\lib\net46\Microsoft.VisualStudio.Text.Logic.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Text.UI, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.VisualStudio.Text.UI.15.4.27004\lib\net45\Microsoft.VisualStudio.Text.UI.dll</HintPath>
+      <HintPath>..\packages\Microsoft.VisualStudio.Text.UI.15.7.388-preview-gd672682c7b\lib\net46\Microsoft.VisualStudio.Text.UI.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.VisualStudio.Text.UI.Wpf.15.4.27004\lib\net45\Microsoft.VisualStudio.Text.UI.Wpf.dll</HintPath>
+      <HintPath>..\packages\Microsoft.VisualStudio.Text.UI.Wpf.15.6.27740\lib\net46\Microsoft.VisualStudio.Text.UI.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -388,6 +397,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
