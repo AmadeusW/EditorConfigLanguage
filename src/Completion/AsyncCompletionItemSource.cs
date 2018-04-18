@@ -134,9 +134,17 @@ namespace EditorConfig
             return new CompletionContext(list.ToImmutable());
         }
 
-        Task<object> IAsyncCompletionSource.GetDescriptionAsync(CompletionItem item, CancellationToken token)
+        async Task<object> IAsyncCompletionSource.GetDescriptionAsync(CompletionItem item, CancellationToken token)
         {
-            return Task.FromResult<object>("todo");
+            if (item.Properties.TryGetProperty("item", out ITooltip editorConfigItem) &&
+                !string.IsNullOrEmpty(editorConfigItem.Description))
+            {
+                // Note, this tooltip will work only on Windows.
+                // To get tooltips to work on VS:mac, use elements understood by Microsoft.VisualStudio.Text.Adornments.IViewElementFactoryService
+                return new Shared.EditorTooltip(editorConfigItem);
+            }
+
+            return null;
         }
 
         bool IAsyncCompletionSource.TryGetApplicableSpan(char typeChar, SnapshotPoint triggerLocation, out SnapshotSpan applicableSpan)
