@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace EditorConfig
 {
-    [Export(typeof(ICompletionSourceProvider))]
+    //[Export(typeof(ICompletionSourceProvider))]
     [ContentType(Constants.LanguageName)]
     [Name("Editor Config")]
     public class EditorConfigCompletionSourceProvider : ICompletionSourceProvider

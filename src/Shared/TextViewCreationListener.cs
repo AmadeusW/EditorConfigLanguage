@@ -57,7 +57,7 @@ namespace EditorConfig
             ITextBufferUndoManager undoManager = UndoProvider.GetTextBufferUndoManager(view.TextBuffer);
 
             AddCommandFilter(textViewAdapter, new FormatterCommand(view, undoManager));
-            AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker, QuickInfoBroker));
+            //AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker, QuickInfoBroker));
             AddCommandFilter(textViewAdapter, new F1Help());
             AddCommandFilter(textViewAdapter, new NavigateToParent(_buffer));
             AddCommandFilter(textViewAdapter, new SignatureHelpCommand(view, SignatureHelpBroker, QuickInfoBroker));
