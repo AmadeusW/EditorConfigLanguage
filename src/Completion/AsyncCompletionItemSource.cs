@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.Core.Imaging;
 using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense.AsyncCompletion;
+using Microsoft.VisualStudio.Language.Intellisense.AsyncCompletion.Data;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 
@@ -28,15 +30,15 @@ namespace EditorConfig
             _document = EditorConfigDocument.FromTextBuffer(_buffer);
         }
 
-        static readonly CompletionFilter StandardFilter = new CompletionFilter("Standard rules", "S", new AccessibleImageId(KnownMonikers.Property.ToImageId(), "Standard rules"));
-        static readonly CompletionFilter CsFilter = new CompletionFilter("C# analysis rules", "C", new AccessibleImageId(KnownMonikers.CSFileNode.ToImageId(), "C# rules"));
-        static readonly CompletionFilter DotNetFilter = new CompletionFilter(".NET analysis rules", "D", new AccessibleImageId(KnownMonikers.DotNET.ToImageId(), "Dot NET rules"));
+        static readonly CompletionFilter StandardFilter = new CompletionFilter("Standard rules", "S", new ImageElement(KnownMonikers.Property.ToImageId(), "Standard rules"));
+        static readonly CompletionFilter CsFilter = new CompletionFilter("C# analysis rules", "C", new ImageElement(KnownMonikers.CSFileNode.ToImageId(), "C# rules"));
+        static readonly CompletionFilter DotNetFilter = new CompletionFilter(".NET analysis rules", "D", new ImageElement(KnownMonikers.DotNET.ToImageId(), "Dot NET rules"));
         static readonly ImmutableArray<CompletionFilter> StandardFilters = new CompletionFilter[] { StandardFilter }.ToImmutableArray();
         static readonly ImmutableArray<CompletionFilter> CsFilters = new CompletionFilter[] { CsFilter }.ToImmutableArray();
         static readonly ImmutableArray<CompletionFilter> DotNetFilters = new CompletionFilter[] { DotNetFilter }.ToImmutableArray();
-        static readonly ImmutableArray<AccessibleImageId> WarningIcons = new AccessibleImageId[] { new AccessibleImageId(KnownMonikers.IntellisenseWarning.ToImageId(), "warning") }.ToImmutableArray();
+        static readonly ImmutableArray<ImageElement> WarningIcons = new ImageElement[] { new ImageElement(KnownMonikers.IntellisenseWarning.ToImageId(), "warning") }.ToImmutableArray();
 
-        async Task<CompletionContext> IAsyncCompletionSource.GetCompletionContextAsync(CompletionTrigger trigger, SnapshotPoint triggerLocation, SnapshotSpan applicableSpan, CancellationToken token)
+        async Task<CompletionContext> IAsyncCompletionSource.GetCompletionContextAsync(InitialTrigger trigger, SnapshotPoint triggerLocation, SnapshotSpan applicableSpan, CancellationToken token)
         {
             SnapshotSpan line = triggerLocation.GetContainingLine().Extent;
             var position = triggerLocation.Position;
@@ -75,7 +77,7 @@ namespace EditorConfig
                 {
                     if (!item.SupportsMultipleValues && parseItem.Text.Contains(","))
                     {
-                        return CompletionContext.Default;
+                        return CompletionContext.Empty;
                     }
 
                     foreach (Value value in item.Values)
@@ -147,7 +149,7 @@ namespace EditorConfig
             return null;
         }
 
-        bool IAsyncCompletionSource.TryGetApplicableSpan(char typeChar, SnapshotPoint triggerLocation, out SnapshotSpan applicableSpan)
+        bool IAsyncCompletionSource.TryGetApplicableToSpan(char typeChar, SnapshotPoint triggerLocation, out SnapshotSpan applicableSpan, CancellationToken token)
         {
             applicableSpan = default(SnapshotSpan);
 
@@ -188,7 +190,7 @@ namespace EditorConfig
 
         private CompletionItem CreateCompletion(ITooltip item, Category category = Category.None, string iconAutomation = null)
         {
-            ImmutableArray<AccessibleImageId> extraIcons = ImmutableArray<AccessibleImageId>.Empty;
+            ImmutableArray<ImageElement> extraIcons = ImmutableArray<ImageElement>.Empty;
             string automationText;
             ImmutableArray<CompletionFilter> filters;
             string displayText = item.Name;
@@ -218,7 +220,7 @@ namespace EditorConfig
                     automationText = iconAutomation ?? string.Empty;
                     break;
             }
-            var completion = new CompletionItem(displayText, this, new AccessibleImageId(item.Moniker.ToImageId(), automationText), filters, string.Empty, item.Name, item.Name, item.Name, extraIcons);
+            var completion = new CompletionItem(displayText, this, new ImageElement(item.Moniker.ToImageId(), automationText), filters, string.Empty, item.Name, item.Name, item.Name, extraIcons);
             completion.Properties.AddProperty("item", item);
 
             return completion;

@@ -1,6 +1,8 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading;
 using Microsoft.VisualStudio.Language.Intellisense.AsyncCompletion;
+using Microsoft.VisualStudio.Language.Intellisense.AsyncCompletion.Data;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
@@ -19,9 +21,9 @@ namespace EditorConfig
             this.navigatorService = navigatorService;
         }
 
-        ImmutableArray<char> IAsyncCompletionCommitManager.PotentialCommitCharacters => commitChars;
+        IEnumerable<char> IAsyncCompletionCommitManager.PotentialCommitCharacters => commitChars;
 
-        bool IAsyncCompletionCommitManager.ShouldCommitCompletion(char typeChar, SnapshotPoint location)
+        bool IAsyncCompletionCommitManager.ShouldCommitCompletion(char typeChar, SnapshotPoint location, CancellationToken token)
         {
             return true;
         }
